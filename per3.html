@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Percentage – Mock Test 3</title>
+<style>
+  :root{--primary:#0b73ff;--bg:#f5f7fb;--card:#ffffff;--text:#222;--muted:#666;--success:#1aa65b;--danger:#e03b3b}
+  *{box-sizing:border-box} body{margin:0;font-family:system-ui,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  header{background:#111;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  header h1{margin:0;font-size:18px}
+  .timer{background:#fff;color:#111;padding:6px 10px;border-radius:8px;font-weight:700}
+  .container{max-width:900px;margin:18px auto;padding:0 14px}
+  .card{background:var(--card);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:18px;margin-bottom:16px}
+  .q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .q-index{font-weight:700;color:var(--primary)} .q-text{font-size:18px;line-height:1.5}
+  .options{margin-top:12px;display:grid;gap:10px}
+  .opt{border:1px solid #e6e8ef;border-radius:10px;padding:12px;cursor:pointer;transition:.2s;background:#fff}
+  .opt:hover{border-color:var(--primary);box-shadow:0 3px 10px rgba(11,115,255,.12)}
+  .opt.selected{outline:2px solid var(--primary);background:#f0f6ff}
+  .nav{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-top:12px}
+  button{background:var(--primary);color:#fff;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}
+  button[disabled]{opacity:.6;cursor:not-allowed} .ghost{background:#eef3ff;color:#0b3b99} .success{background:var(--success)}
+  .pill{display:inline-block;background:#eef3ff;color:#0b3b99;padding:4px 8px;border-radius:999px;font-size:12px}
+  .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .result{padding:16px;border-left:6px solid var(--primary)}
+  .kpi{display:flex;gap:12px;flex-wrap:wrap}
+  .kpi .chip{background:#f2f4f9;border-radius:10px;padding:10px 12px;min-width:120px}
+  .review .item{border:1px solid #eceff5;border-radius:12px;padding:14px;margin-bottom:12px}
+  .ans{margin-top:8px;font-size:14px} .correct{color:var(--success);font-weight:700} .wrong{color:var(--danger);font-weight:700}
+  details{margin-top:8px;background:#fbfcff;border:1px dashed #dfe6fb;border-radius:10px;padding:8px 10px}
+  summary{cursor:pointer;font-weight:600} .footer-note{color:var(--muted);font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>प्रतिशत (Percentage) — Mock Test 3</h1>
+  <div class="meta">
+    <span class="pill">25 प्रश्न</span>
+    <span class="pill">35 मिनट</span>
+    <div id="timer" class="timer">35:00</div>
+  </div>
+</header>
+
+<div class="container">
+  <div id="quizCard" class="card">
+    <div class="q-header">
+      <div class="q-index">प्रश्न <span id="qNo">1</span> / <span id="qTotal">25</span></div>
+      <div class="pill" id="progressPill">Attempted: 0</div>
+    </div>
+    <div id="qText" class="q-text"></div>
+    <div id="options" class="options"></div>
+
+    <div class="nav">
+      <div>
+        <button id="prevBtn" class="ghost">⬅️ Previous</button>
+        <button id="nextBtn">Next ➡️</button>
+      </div>
+      <div>
+        <button id="clearBtn" class="ghost">Clear</button>
+        <button id="submitBtn" class="success">✅ Submit</button>
+      </div>
+    </div>
+    <div class="footer-note">Submit के बाद जवाब बदले नहीं जा सकेंगे। टाइमर 0 होने पर टेस्ट auto-submit हो जाएगा।</div>
+  </div>
+
+  <div id="resultCard" class="card" style="display:none">
+    <h2 style="margin:0 0 8px">📊 Result</h2>
+    <div id="scoreLine" class="result"></div>
+    <div class="kpi" style="margin-top:12px">
+      <div class="chip">✅ Correct: <b id="correctCount">0</b></div>
+      <div class="chip">❌ Wrong: <b id="wrongCount">0</b></div>
+      <div class="chip">⏳ Unattempted: <b id="unattCount">0</b></div>
+      <div class="chip">🎯 Score (%): <b id="scorePct">0</b></div>
+      <div class="chip">⌛ Time Used: <b id="timeUsed">0:00</b></div>
+    </div>
+  </div>
+
+  <div id="reviewCard" class="card review" style="display:none">
+    <h2 style="margin:0 0 8px">📝 Answer Review + Detailed Explanations</h2>
+    <div id="reviewList"></div>
+  </div>
+</div>
+
+<script>
+/* ===================== QUESTIONS (25 from list) ===================== */
+const questions = [
+{q:"Two numbers are respectively 61% and 35% less than a third number. The first number is what percentage of the second number?",options:["24%","48%","60%","75%"],answerIndex:2,explanation:"Third=100 ⇒ First=39, Second=65 ⇒ 39/65=60%."},
+{q:"The price of a bike is first increased by 21% and then decreased by 34%. Net change?",options:["13.25% increase","13.25% decrease","20.14% decrease","20.14% increase"],answerIndex:2,explanation:"1.21×0.66=0.7986 ⇒ 20.14% decrease."},
+{q:"Anil’s income is 18% more than Ramesh’s. By what percent is Ramesh’s income less than Anil’s?",options:["18.25%","15.25%","12.25%","10.25%"],answerIndex:1,explanation:"R=A/1.18 ⇒ कमी ≈15.25%."},
+{q:"किसी वस्तु पर पहले 25% की छूट और फिर 20% की छूट दी जाती है। समतुल्य एकल छूट क्या होगी?",options:["45%","40%","30%","25%"],answerIndex:1,explanation:"a+b−ab/100 = 40%."},
+{q:"A number was multiplied by 7 instead of 2/3 by mistake. The result obtained is what percent of the correct result?",options:["950%","1050%","1150%","1200%"],answerIndex:1,explanation:"7 ÷ (2/3)=10.5 ⇒ 1050%."},
+{q:"Sugar price increases by 22.5%. To keep expenditure same, consumption must decrease by…",options:["18.37%","18.80%","19.24%","17.12%"],answerIndex:0,explanation:"1/1.225=0.8163 ⇒ decrease ≈18.37%."},
+{q:"A’s salary is 25% more than B’s and B’s is 20% more than C’s. A is what percent more than C?",options:["45%","50%","55%","60%"],answerIndex:1,explanation:"1.25×1.20=1.50 ⇒ 50% more."},
+{q:"A student answered 60% correctly and left 10% unattempted. Wrong percentage?",options:["25%","30%","20%","15%"],answerIndex:1,explanation:"100−60−10=30% wrong."},
+{q:"Marked Price is 25% above Cost Price. After 10% discount, profit percent?",options:["12.5%","15%","10%","11.25%"],answerIndex:0,explanation:"CP=100→MP=125→SP=112.5 ⇒ Profit=12.5%."},
+{q:"किसी शहर की जनसंख्या एक वर्ष 10% बढ़ी और अगले वर्ष 10% घटी। कुल परिवर्तन?",options:["1% कमी","1% वृद्धि","कोई परिवर्तन नहीं","2% कमी"],answerIndex:0,explanation:"1.1×0.9=0.99 ⇒ 1% कमी।"},
+{q:"Successive discounts 20% and 10% are equivalent to single discount of…",options:["28%","30%","32%","27%"],answerIndex:0,explanation:"20+10−2=28%."},
+{q:"किसी वस्तु की कीमत 30% घटती है। उसी खर्च को बनाए रखने के लिए खपत कितने % बढ़ाएँ?",options:["30%","42.86%","45%","50%"],answerIndex:1,explanation:"1/0.7=1.4286 ⇒ 42.86%."},
+{q:"A mixture has milk:water=4:1. 20% removed & replaced by water. Milk % now?",options:["64%","68%","72%","76%"],answerIndex:0,explanation:"Milk left=64, total=100 ⇒ 64%."},
+{q:"A’s income is 40% more than B’s; B is less than A by…",options:["28.57%","30%","33.33%","35%"],answerIndex:0,explanation:"A=140,B=100 ⇒ B 28.57% less."},
+{q:"Price increased 25% then decreased 25%. Net effect?",options:["0%","6.25% decrease","6.25% increase","12.5% decrease"],answerIndex:1,explanation:"1.25×0.75=0.9375 ⇒ 6.25% decrease."},
+{q:"Shopkeeper allows 15% discount and 8% GST, customer pays ₹2295. Find MP.",options:["₹2400","₹2500","₹2600","₹2700"],answerIndex:1,explanation:"Pay=0.918×MP=2295 ⇒ MP=2500."},
+{q:"पास होने के लिए 40% आवश्यक है। छात्र ने 180 में से 66 पाए। और कितने अंक चाहिए?",options:["6","8","10","12"],answerIndex:0,explanation:"0.4×180=72 ⇒ Need 6 more."},
+{q:"Two successive changes +40% and −25%. Net effect?",options:["5% increase","10% increase","5% decrease","No change"],answerIndex:0,explanation:"1.4×0.75=1.05 ⇒ 5% increase."},
+{q:"School में लड़के लड़कियों से 25% अधिक हैं। कुल में लड़कों का प्रतिशत?",options:["55.56%","60%","62.5%","66.67%"],answerIndex:0,explanation:"Girls=100,Boys=125,Total=225 ⇒ 55.56%."},
+{q:"A number increased by x% becomes 225% of itself. Find x.",options:["100%","125%","150%","200%"],answerIndex:1,explanation:"1+x/100=2.25 ⇒ x=125%."},
+{q:"After 20% discount, trader still makes 25% profit. MP is what % of CP?",options:["150%","156.25%","160%","175%"],answerIndex:1,explanation:"CP=100,SP=125,0.8MP=125 ⇒ MP=156.25%."},
+{q:"Candidate attempted 75% and got 80% of them correct. Overall accuracy?",options:["55%","60%","65%","70%"],answerIndex:1,explanation:"0.75×0.8=0.6 ⇒ 60%."},
+{q:"किसी वस्तु पर 12.5% की छूट देने पर SP=₹700 है। MP?",options:["₹760","₹780","₹800","₹820"],answerIndex:2,explanation:"700/0.875=800."},
+{q:"Production decreased 30%, then increased 20%. Overall effect?",options:["10% decrease","16% decrease","14% decrease","20% decrease"],answerIndex:1,explanation:"0.7×1.2=0.84 ⇒ 16% decrease."},
+{q:"CP=₹1600. Sold at 20% loss. If sold ₹480 more, 10% profit. Verify CP?",options:["₹1600","₹1800","₹2000","₹1500"],answerIndex:0,explanation:"SP1=1280,SP2=1760 ⇒ diff=480 ⇒ CP=1600."}
+];
+
+/* QUIZ ENGINE (same as before) */
+const TOTAL_QUESTIONS=questions.length,QUIZ_MINUTES=35;
+const qNoEl=document.getElementById('qNo'),qTotalEl=document.getElementById('qTotal');
+const qTextEl=document.getElementById('qText'),optionsEl=document.getElementById('options');
+const progressPill=document.getElementById('progressPill');
+const prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn');
+const clearBtn=document.getElementById('clearBtn'),submitBtn=document.getElementById('submitBtn');
+const timerEl=document.getElementById('timer');
+const quizCard=document.getElementById('quizCard'),resultCard=document.getElementById('resultCard');
+const reviewCard=document.getElementById('reviewCard'),scoreLine=document.getElementById('scoreLine');
+const correctCountEl=document.getElementById('correctCount'),wrongCountEl=document.getElementById('wrongCount');
+const unattCountEl=document.getElementById('unattCount'),scorePctEl=document.getElementById('scorePct');
+const timeUsedEl=document.getElementById('timeUsed'),reviewList=document.getElementById('reviewList');
+let current=1,selections=Array(TOTAL_QUESTIONS).fill(null),submitted=false;
+qTotalEl.textContent=TOTAL_QUESTIONS;renderQuestion();
+prevBtn.onclick=()=>{if(current>1){current--;renderQuestion();}};
+nextBtn.onclick=()=>{if(current<TOTAL_QUESTIONS){current++;renderQuestion();}};
+clearBtn.onclick=()=>{selections[current-1]=null;renderQuestion();updateProgress();};
+submitBtn.onclick=submitQuiz;
+function renderQuestion(){const q=questions[current-1];qNoEl.textContent=current;qTextEl.textContent=q.q;optionsEl.innerHTML='';q.options.forEach((opt,idx)=>{const div=document.createElement('div');div.className='opt'+(selections[current-1]===idx?' selected':'');div.innerHTML=`<b>${String.fromCharCode(65+idx)}.</b> ${opt}`;div.onclick=()=>{selections[current-1]=idx;renderQuestion();updateProgress();};optionsEl.appendChild(div);});prevBtn.disabled=current===1;nextBtn.disabled=current===TOTAL_QUESTIONS;}
+function updateProgress(){const attempted=selections.filter(x=>x!==null).length;progressPill.textContent=`Attempted: ${attempted}`;}
+let totalSeconds=QUIZ_MINUTES*60,elapsed=0;const t=setInterval(()=>{if(submitted){clearInterval(t);return;}if(totalSeconds<=0){timerEl.textContent='00:00';autoSubmitOnTime();clearInterval(t);return;}totalSeconds--;elapsed++;const mm=String(Math.floor(totalSeconds/60)).padStart(2,'0');const ss=String(totalSeconds%60).padStart(2,'0');timerEl.textContent=`${mm}:${ss}`;},1000);
+function autoSubmitOnTime(){if(!submitted){alert('समय समाप्त! टेस्ट ऑटो-Submit हो रहा है.');submitQuiz();}}
+function submitQuiz(){if(submitted)return;submitted=true;prevBtn.disabled=true;nextBtn.disabled=true;clearBtn.disabled=true;submitBtn.disabled=true;let correct=0,wrong=0,unatt=0;selections.forEach((sel,i)=>{if(sel===null){unatt++;return;}const ans=questions[i].answerIndex;if(sel===ans){correct++;}else{wrong++;}});const scorePct=Math.round((correct/TOTAL_QUESTIONS)*100);const tu_m=Math.floor(elapsed/60);const tu_s=String(elapsed%60).padStart(2,'0');scoreLine.innerHTML=`आपका स्कोर: <b>${correct}/${TOTAL_QUESTIONS}</b> — <span class="${scorePct>=60?'correct':'wrong'}">${scorePct}%</span>`;correctCountEl.textContent=correct;wrongCountEl.textContent=wrong;unattCountEl.textContent=unatt;scorePctEl.textContent=scorePct;timeUsedEl.textContent=`${tu_m}:${tu_s}`;quizCard.style.display='none';resultCard.style.display='block';reviewCard
